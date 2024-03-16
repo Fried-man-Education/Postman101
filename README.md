@@ -1,3 +1,4 @@
+![banner](https://github.com/Fried-man-Education/Postman101/assets/17306743/c6188241-1e02-4bf8-aa87-d3a8a93389e2)
 # Postman101 - Postman: The Complete Guide - REST API Testing - Student Solutions
 
 This repository contains my collection of solutions for the "Postman API Testing for Manual and Automated Tests" course. The course covers a wide range of topics from creating basic requests to advanced automation techniques with Newman and Jenkins. Below is a detailed guide to the course content, corresponding to each section of my Postman collections.
