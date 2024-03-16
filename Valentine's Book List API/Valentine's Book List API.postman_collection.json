@@ -1,0 +1,89 @@
+{
+	"info": {
+		"_postman_id": "0a39ccef-a771-4b63-aa76-e84fcdfb076d",
+		"name": "Valentine's Book List API",
+		"description": "This API allows you to reserve a book.\n\nThe API is available at `https://simple-books-api.glitch.me`\n\nLink to official documentation is [here](https://github.com/vdespa/introduction-to-postman-course/blob/main/simple-books-api.md)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "32643030"
+	},
+	"item": [
+		{
+			"name": "API Status",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/status",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"status"
+					]
+				},
+				"description": "This endpoint allows you to retrieve the status of the API.\n\n### Response\n\n- Status: 200\n- Content-Type: application/json\n    \n\nThe response will contain the status of the API in JSON format.\n\nExample response:\n\n``` json\n{\n    \"status\": \"UP\"\n}\n\n ```"
+			},
+			"response": []
+		},
+		{
+			"name": "Get book list",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/books/lists?api-key=8fhg93xkjd38fhg834jdfgjd&list=non-fiction&page=3",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"books",
+						"lists"
+					],
+					"query": [
+						{
+							"key": "api-key",
+							"value": "8fhg93xkjd38fhg834jdfgjd"
+						},
+						{
+							"key": "list",
+							"value": "non-fiction"
+						},
+						{
+							"key": "page",
+							"value": "3"
+						}
+					]
+				},
+				"description": "This endpoint allows you to retrieve a list of books. You can make an HTTP GET request to `{{baseUrl}}/books/lists` with the following query parameters:\n\n- `api-key`: Your API key for authentication\n- `list`: Specify the type of list, either \"fiction\" or \"non-fiction\"\n- `page`: The page number for paginated results\n    \n\nOptional query parameters:\n\n- `type`: Filter the results by book type, either \"fiction\" or \"non-fiction\"\n- `limit`: Limit the number of results, with a value between 1 and 20.\n    \n\nThe response will be in JSON format with the following structure:\n\n``` json\n{\n    \"status\": \"\",\n    \"num_results\": 0,\n    \"page\": \"\",\n    \"total_pages\": 0,\n    \"results\": [\n        {\n            \"title\": \"\",\n            \"category\": [\"\"],\n            \"type\": \"\",\n            \"author\": \"\",\n            \"release_year\": 0,\n            \"rating\": 0\n        }\n    ]\n}\n\n ```\n\nThe `status` field indicates the status of the response, `num_results` represents the number of results, `page` denotes the current page, `total_pages` is the total number of pages, and `results` contain an array of book objects with their `title`, `category`, `type`, `author`, `release_year`, and `rating`.\n\nPlease note that the actual values for the fields will be populated in the response."
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "https://valentines-book-list.glitch.me",
+			"type": "string"
+		}
+	]
+}
