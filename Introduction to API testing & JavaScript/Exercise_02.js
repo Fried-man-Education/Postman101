@@ -4,3 +4,8 @@ The values for variables firstName and lastName need to be switched. The firstNa
 Without altering the initial variable definition, switch the values between the two variables.
 Hint: Use a temporary variable named temp to hold the value of one of the variables.
 */
+let firstName = "Doe";
+let lastName = "Jamie";
+const temp = firstName;
+firstName = lastName;
+lastName = temp;
