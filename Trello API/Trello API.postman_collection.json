@@ -1,0 +1,371 @@
+{
+	"info": {
+		"_postman_id": "3e10f051-a2d0-4cef-9c07-129d9ac6c687",
+		"name": "Trello API",
+		"description": "The Trello API is extremely powerful and fun to use. Building a full application with Trello for web or mobile means getting to know the various concepts and models making up Trello.\n\nLink to official documentaion is [here](https://developer.atlassian.com/cloud/trello/rest/).",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "32643030"
+	},
+	"item": [
+		{
+			"name": "Get all boards",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/members/me/boards?key={{trelloKey}}&token={{trelloToken}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"members",
+						"me",
+						"boards"
+					],
+					"query": [
+						{
+							"key": "key",
+							"value": "{{trelloKey}}"
+						},
+						{
+							"key": "token",
+							"value": "{{trelloToken}}"
+						}
+					]
+				},
+				"description": "This API endpoint lists the boards that a user is a member of.\n\n## Request\n\n### Path Parameters\n\n- **id** (`TrelloID`) **REQUIRED**\n  - The ID or username of the member\n  - Pattern: `^[0-9a-fA-F]{24}$`\n\n### Query Parameters\n\n- **filter** (`string`)\n  - Can be `all` or a comma-separated list of: `closed`, `members`, `open`, `organization`, `public`, `starred`\n  - Default: `all`\n  - Valid values: `all`, `closed`, `members`, `open`, `organization`, `public`, `starred`\n\n- **fields** (`BoardFields`)\n  - Can be `all` or a comma-separated list of board fields\n  - Valid values: `id`, `name`, `desc`, `descData`, `closed`, `idMemberCreator`, `idOrganization`, `pinned`, `url`, `shortUrl`, ...(Show more)\n\n- **lists** (`string`)\n  - Which lists to include with the boards. One of: `all`, `closed`, `none`, `open`\n  - Default: `none`\n  - Valid values: `all`, `closed`, `none`, `open`\n\n- **organization** (`boolean`)\n  - Whether to include the Organization object with the Boards\n  - Default: `false`\n\n- **organization_fields** (`OrganizationFields`)\n  - Can be `all` or a comma-separated list of organization fields\n  - Style: form\n  - Valid values: `id`, `name`\n\n## Responses\n\n### 200 OK\n\n- **Success**\n  - Content-Type: `application/json`"
+			},
+			"response": []
+		},
+		{
+			"name": "Create board",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/boards/?name=Learning Postman&key={{trelloKey}}&token={{trelloToken}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"boards",
+						""
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "Learning Postman"
+						},
+						{
+							"key": "key",
+							"value": "{{trelloKey}}"
+						},
+						{
+							"key": "token",
+							"value": "{{trelloToken}}"
+						}
+					]
+				},
+				"description": "This API endpoint allows the creation of a new board.\n\n###Request\n\n### Query Parameters\n\n- **name** (`string`) **REQUIRED**\n  - The new name for the board. Must be 1 to 16384 characters long.\n  - Min length: 1\n  - Max length: 16384\n\n- **defaultLabels** (`boolean`)\n  - Determines whether to use the default set of labels.\n  - Default: `true`\n\n- **defaultLists** (`boolean`)\n  - Determines whether to add the default set of lists to a board (To Do, Doing, Done). It is ignored if `idBoardSource` is provided.\n  - Default: `true`\n\n- **desc** (`string`)\n  - A new description for the board, 0 to 16384 characters long.\n  - Min length: 0\n  - Max length: 16384\n\n- **idOrganization** (`TrelloID`)\n  - The ID or name of the Workspace the board should belong to.\n  - Pattern: `^[0-9a-fA-F]{24}$`\n\n- **idBoardSource** (`TrelloID`)\n  - The ID of a board to copy into the new board.\n  - Pattern: `^[0-9a-fA-F]{24}$`\n\n- **keepFromSource** (`string`)\n  - To keep cards from the original board, pass in the value `cards`.\n  - Default: `none`\n  - Valid values: `cards`, `none`\n\n- **powerUps** (`string`)\n  - The Power-Ups that should be enabled on the new board. One of: `all`, `calendar`, `cardAging`, `recap`, `voting`.\n  - Valid values: `all`, `calendar`, `cardAging`, `recap`, `voting`\n\n- **prefs_permissionLevel** (`string`)\n  - The permissions level of the board. One of: `org`, `private`, `public`.\n  - Default: `private`\n  - Valid values: `org`, `private`, `public`\n\n- **prefs_voting** (`string`)\n  - Who can vote on this board. One of: `disabled`, `members`, `observers`, `org`, `public`.\n  - Default: `disabled`\n  - Valid values: `disabled`, `members`, `observers`, `org`, `public`\n\n## Responses\n\n### 200 OK\n\n- **Success**"
+			},
+			"response": []
+		},
+		{
+			"name": "Get single board",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/boards/:id?key={{trelloKey}}&token={{trelloToken}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"boards",
+						":id"
+					],
+					"query": [
+						{
+							"key": "key",
+							"value": "{{trelloKey}}"
+						},
+						{
+							"key": "token",
+							"value": "{{trelloToken}}"
+						}
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "65f627c2fc8211c9428e047e"
+						}
+					]
+				},
+				"description": "This API endpoint retrieves details for a single board by its ID.\n\n## Request\n\n### Path Parameters\n\n- **id** (`TrelloID`) **REQUIRED**\n  - The ID of the board.\n  - Pattern: `^[0-9a-fA-F]{24}$`\n\n### Query Parameters\n\n- **actions** (`string`)\n  - A nested resource. Read more about actions as nested resources.\n  - Default: `all`\n\n- **boardStars** (`string`)\n  - Valid values: `mine`, `none`.\n  - Default: `none`\n\n- **cards** (`string`)\n  - A nested resource. Read more about cards as nested resources.\n  - Default: `none`\n\n- **card_pluginData** (`boolean`)\n  - Use with the `cards` param to include card pluginData with the response.\n  - Default: `false`\n\n- **checklists** (`string`)\n  - A nested resource. Read more about checklists as nested resources.\n  - Default: `none`\n\n- **customFields** (`boolean`)\n  - A nested resource. Read more about custom fields as nested resources.\n  - Default: `false`\n\n- **fields** (`string`)\n  - The fields of the board to be included in the response. Can be `all` or a comma-separated list of specific fields.\n  - Default: `name,desc,descData,closed,idOrganization,pinned,url,shortUrl,prefs,labelNames`\n  - Valid values include: `closed`, `dateLastActivity`, `dateLastView`, `desc`, `descData`, `idMemberCreator`, `idOrganization`, `invitations`, `invited`, `labelNames`, `memberships`, `name`, `pinned`, `powerUps`, `prefs`, `shortLink`, `shortUrl`, `starred`, `subscribed`, `url`\n\n- **labels** (`string`)\n  - A nested resource. Read more about labels as nested resources.\n  - Default: unspecified\n\n- **lists** (`string`)\n  - A nested resource. Read more about lists as nested resources.\n  - Default: `open`\n\n- **members** (`string`)\n  - A nested resource. Read more about members as nested resources.\n  - Default: `none`\n\n## Responses\n\n### 200 OK\n\n- Indicates successful retrieval of the board details.\n\n### 401 Unauthorized\n\n- Access token is missing or invalid.\n\n### 404 Not Found\n\n- The board with the specified ID was not found.\n\n### DEFAULT\n\n- **Unexpected error**\n  - Content-Type: `application/json`\n  - **Error**: Description of the error."
+			},
+			"response": []
+		},
+		{
+			"name": "Get lists",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/boards/:id/lists?key={{trelloKey}}&token={{trelloToken}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"boards",
+						":id",
+						"lists"
+					],
+					"query": [
+						{
+							"key": "key",
+							"value": "{{trelloKey}}"
+						},
+						{
+							"key": "token",
+							"value": "{{trelloToken}}"
+						}
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "65f627c2fc8211c9428e047e"
+						}
+					]
+				},
+				"description": "This API endpoint retrieves all the lists on a specified board.\n\n## Request\n\n### Path Parameters\n\n- **id** (`TrelloID`) **REQUIRED**\n  - The ID of the board.\n  - Pattern: `^[0-9a-fA-F]{24}$`\n\n### Query Parameters\n\n- **cards** (`ViewFilter`)\n  - Filter to apply to Cards.\n  - Valid values: `all`, `closed`, `none`, `open`\n\n- **card_fields** (`string`)\n  - Can be `all` or a comma-separated list of card fields.\n  - Default: `all`\n\n- **filter** (`ViewFilter`)\n  - Filter to apply to Lists.\n  - Valid values: `all`, `closed`, `none`, `open`\n\n- **fields** (`string`)\n  - Can be `all` or a comma-separated list of list fields.\n  - Default: `all`\n\n## Responses\n\n### 200 OK\n\n- **Success**\n  - Content-Type: `application/json`\n  - Returns an array of `TrelloList` objects."
+			},
+			"response": []
+		},
+		{
+			"name": "Create TODO list",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/boards/:id/lists?name=TODO&key={{trelloKey}}&token={{trelloToken}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"boards",
+						":id",
+						"lists"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "TODO"
+						},
+						{
+							"key": "key",
+							"value": "{{trelloKey}}"
+						},
+						{
+							"key": "token",
+							"value": "{{trelloToken}}"
+						}
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "65f627c2fc8211c9428e047e"
+						}
+					]
+				},
+				"description": "This API endpoint allows for the creation of a new TODO list on a specified board.\n\n## Request\n\n### Path Parameters\n\n- **id** (`TrelloID`) **REQUIRED**\n    - The ID of the board where the list will be created.\n    - Pattern: `^[0-9a-fA-F]{24}$`\n\n### Query Parameters\n\n- **name** (`string`) **REQUIRED**\n    - The name of the new list. Must be 1 to 16384 characters long. In this case, \"TODO\".\n- **pos** (`string`)\n    - Determines the position of the new list on the board. Can be `top`, `bottom`, or a positive number to specify an exact position.\n    - Default: `top`\n\n## Responses\n\n### 200 OK\n\n- **Success**\n    - Content-Type: `application/json`\n    - Returns a `TrelloList` object representing the newly created list."
+			},
+			"response": []
+		},
+		{
+			"name": "Create DONE list",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/boards/:id/lists?name=DONE&key={{trelloKey}}&token={{trelloToken}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"boards",
+						":id",
+						"lists"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "DONE"
+						},
+						{
+							"key": "key",
+							"value": "{{trelloKey}}"
+						},
+						{
+							"key": "token",
+							"value": "{{trelloToken}}"
+						}
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "65f627c2fc8211c9428e047e"
+						}
+					]
+				},
+				"description": "This API endpoint allows for the creation of a new DONE list on a specified board.  \nRequest  \nPath Parameters  \nid (TrelloID) REQUIRED  \nThe ID of the board where the list will be created.  \nPattern: ^\\[0-9a-fA-F\\]{24}$\n\nQuery Parameters  \nname (string) REQUIRED  \nThe name of the new list. Must be 1 to 16384 characters long. In this case, \"DONE\".\n\npos (string)  \nDetermines the position of the new list on the board. Can be top, bottom, or a positive number to specify an exact position.  \nDefault: top\n\nResponses  \n200 OK  \nSuccess  \nContent-Type: application/json  \nReturns a TrelloList object representing the newly created list."
+			},
+			"response": []
+		},
+		{
+			"name": "Create card",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/cards?idList=65f76b20f1482f9113dc1ce4&key={{trelloKey}}&token={{trelloToken}}&name=Sign-up for Trello",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"cards"
+					],
+					"query": [
+						{
+							"key": "idList",
+							"value": "65f76b20f1482f9113dc1ce4"
+						},
+						{
+							"key": "key",
+							"value": "{{trelloKey}}"
+						},
+						{
+							"key": "token",
+							"value": "{{trelloToken}}"
+						},
+						{
+							"key": "name",
+							"value": "Sign-up for Trello"
+						}
+					]
+				},
+				"description": "This API endpoint allows for the creation of a new card. Parameters for creating a card can be passed as query parameters or within a JSON request body.\n\n## Request\n\n### Query Parameters\n\n- **name** (`string`)\n    - The name for the card.\n- **desc** (`string`)\n    - The description for the card.\n- **pos** (`oneOf [string, number]`)\n    - The position of the new card. Can be `top`, `bottom`, or a positive float.\n- **due** (`string`)\n    - A due date for the card.\n    - Format: date\n- **start** (`string`)\n    - The start date of a card, or `null`.\n    - Nullable: true\n    - Format: date\n- **dueComplete** (`boolean`)\n    - Indicates whether the due date is marked as complete.\n- **idList** (`TrelloID`) **REQUIRED**\n    - The ID of the list the card should be created in.\n    - Pattern: `^[0-9a-fA-F]{24}$`\n- **idMembers** (`array`)\n    - Comma-separated list of member IDs to add to the card.\n- **idLabels** (`array`)\n    - Comma-separated list of label IDs to add to the card.\n- **urlSource** (`string`)\n    - A URL starting with `http://` or `https://`.\n    - Format: url\n\n## Responses\n\n### 200 OK\n\n- **Success**\n    - Content-Type: `application/json`\n    - Returns a `Card` object representing the newly created card."
+			},
+			"response": []
+		},
+		{
+			"name": "Move card to DONE list",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/cards/:id?key={{trelloKey}}&token={{trelloToken}}&idList=65f76cb9377679ca019750a6",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"cards",
+						":id"
+					],
+					"query": [
+						{
+							"key": "key",
+							"value": "{{trelloKey}}"
+						},
+						{
+							"key": "token",
+							"value": "{{trelloToken}}"
+						},
+						{
+							"key": "idList",
+							"value": "65f76cb9377679ca019750a6"
+						}
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "65f76d76e4866c5c2b80b0bc"
+						}
+					]
+				},
+				"description": "This API endpoint updates an existing card. Parameters for updating a card can be passed as query parameters or within a JSON request body. In this case we are updating the list attribute of card to match the DONE list.\n\n## Request\n\n### Path Parameters\n\n- **id** (`TrelloID`) **REQUIRED**\n  - The ID of the card to update.\n  - Pattern: `^[0-9a-fA-F]{24}$`\n\n### Query Parameters\n\n- **name** (`string`)\n  - The new name for the card.\n\n- **desc** (`string`)\n  - The new description for the card.\n\n- **closed** (`boolean`)\n  - Whether the card should be archived (`true` for archived).\n\n- **idMembers** (`TrelloID`)\n  - Comma-separated list of member IDs.\n  - Style: form\n  - Pattern: `^[0-9a-fA-F]{24}$`\n\n- **idAttachmentCover** (`TrelloID`)\n  - The ID of the image attachment to use as the card's cover, or `null` for none.\n  - Pattern: `^[0-9a-fA-F]{24}$`\n\n- **idList** (`TrelloID`)\n  - The ID of the list the card should be in.\n  - Pattern: `^[0-9a-fA-F]{24}$`\n\n- **idLabels** (`TrelloID`)\n  - Comma-separated list of label IDs.\n  - Style: form\n  - Pattern: `^[0-9a-fA-F]{24}$`\n\n- **idBoard** (`TrelloID`)\n  - The ID of the board the card should be on.\n  - Pattern: `^[0-9a-fA-F]{24}$`\n\n- **pos** (`oneOf [string, number]`)\n  - The position of the card in its list. Can be `top`, `bottom`, or a positive float.\n\n- **due** (`string`)\n  - When the card is due, or `null`.\n  - Nullable: true\n  - Format: date\n\n- **start** (`string`)\n  - The start date of a card, or `null`.\n  - Nullable: true\n  - Format: date\n\n- **dueComplete** (`boolean`)\n  - Whether the due date should be marked complete.\n\n- **subscribed** (`boolean`)\n  - Whether the member should be subscribed to the card.\n\n- **address**, **locationName**, **coordinates** (`string`)\n  - For use with/by the Map View. Coordinates should be `latitude,longitude`.\n\n- **cover** (`object`)\n  - Updates the card's cover with options for `color`, `brightness`, `url`, `idAttachment`, and `size`. Parameters are mutually exclusive except for `brightness`, which can be combined with any other.\n\n## Responses\n\n- **200 OK**\n  - **Success**\n  - Content-Type: `application/json`\n  - Returns the updated `Card` object."
+			},
+			"response": []
+		},
+		{
+			"name": "Delete a board",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/boards/:id?key={{trelloKey}}&token={{trelloToken}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"boards",
+						":id"
+					],
+					"query": [
+						{
+							"key": "key",
+							"value": "{{trelloKey}}"
+						},
+						{
+							"key": "token",
+							"value": "{{trelloToken}}"
+						}
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "65f627c2fc8211c9428e047e"
+						}
+					]
+				},
+				"description": "This API endpoint allows for the deletion of a specific board.\n\n## Request\n\n### Path Parameters\n\n- **id** (`TrelloID`) **REQUIRED**\n    - The ID of the board to be deleted.\n    - Pattern: `^[0-9a-fA-F]{24}$`\n\n## Responses\n\n### 200 OK\n\n- **Success**\n    \n    - Indicates that the board has been successfully deleted."
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "trelloKey",
+			"value": "YOUR KEY"
+		},
+		{
+			"key": "trelloToken",
+			"value": "YOUR TOKEN"
+		},
+		{
+			"key": "baseUrl",
+			"value": "https://api.trello.com/1"
+		}
+	]
+}
