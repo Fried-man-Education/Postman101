@@ -2,11 +2,13 @@
 
 This API allows you to place a grocery order which will be ready for pick-up in the store.
 
-The API is available at `https://simple-grocery-store-api.glitch.me`
+The API is available at `https://simple-grocery-store-api.glitch.me`
 
-Alternative URL: `http://simple-grocery-store-api.online/` (HTTP only!)
+Alternative URL: `http://simple-grocery-store-api.online/` (HTTP only!)
 
-Link to official documentation is [here](https://github.com/vdespa/Postman-Complete-Guide-API-Testing/blob/main/simple-grocery-store-api.md).
+Link to official documentation is [here](https://github.com/vdespa/Postman-Complete-Guide-API-Testing/blob/main/simple-grocery-store-api.md)
+
+# 📁 Collection: Happy Path
 
 ## End-point: API status
 
@@ -57,14 +59,14 @@ The response will be a JSON array containing objects with the following properti
 ### Method: GET
 
 > ```
-> {{baseUrl}}/products?results=0.2&category=coffee
+> {{baseUrl}}/products?results=2&category=coffee
 > ```
 
 ### Query Params
 
 | Param    | value  |
 | -------- | ------ |
-| results  | 0.2    |
+| results  | 2      |
 | category | coffee |
 
 ## End-point: Get a single product
@@ -250,7 +252,7 @@ This API endpoint allows modifying information about an item in the cart by send
 
 ```json
 {
-  "quantity": 2
+  "quantity": 3
 }
 ```
 
@@ -343,6 +345,34 @@ Returns all orders created by the API client.
 
 > ```
 > {{baseUrl}}/orders
+> ```
+
+### 🔑 Authentication bearer
+
+| Param | value           | Type   |
+| ----- | --------------- | ------ |
+| token | {{accessToken}} | string |
+
+## End-point: Get single order
+
+Returns a single order.
+
+#### Parameters
+
+- Authorization (string, header, required): The bearer token of the API client.
+- orderId (string, path, required): The order id.
+- invoice (boolean, query, optional): Show the PDF invoice.
+
+#### Status codes
+
+- 200 OK: Indicates a successful response.
+- 401 Unauthorized: Indicates that the request has not been authenticated. Check the response body for additional details.
+- 404 Not found: Indicates that there is no order with the specified id associated with the API client.
+
+### Method: GET
+
+> ```
+> {{baseUrl}}/orders/:orderId
 > ```
 
 ### 🔑 Authentication bearer
@@ -539,3 +569,270 @@ The request body needs to be in JSON format.
   "clientEmail": "andrewfriedman01@gmail.com"
 }
 ```
+
+# 📁 Collection: Missing authentication
+
+## End-point: Create an order
+
+The `POST /orders` endpoint is used to submit a new order. Upon successful submission, the associated cart is deleted.
+
+#### Parameters
+
+- Authorization: `string` (header, required) - The bearer token of the API client.
+- cartId: `string` (body, required) - The cart id.
+- customerName: `string` (body, required) - The name of the customer.
+- comment: `string` (body, optional) - A comment associated with the order.
+
+#### Example request body:
+
+```json
+{
+  "cartId": "ZFe4yhG5qNhmuNyrbLWa4",
+  "customerName": "John Doe"
+}
+```
+
+#### Response
+
+Upon successful submission, the response will have a status code of 201 and a JSON content with the following structure:
+
+```json
+{
+  "created": true,
+  "orderId": ""
+}
+```
+
+### Method: POST
+
+> ```
+> {{baseUrl}}/orders
+> ```
+
+### Body (**raw**)
+
+```json
+{
+  "cartId": "{{cartID}}",
+  "customerName": "{{$randomFullName}}"
+}
+```
+
+### 🔑 Authentication noauth
+
+| Param | value | Type |
+| ----- | ----- | ---- |
+
+## End-point: Get all orders
+
+Returns all orders created by the API client.
+
+#### Parameters
+
+- Authorization: (string, header, required) - Specifies the bearer token of the API client.
+
+#### Status codes
+
+- 200 OK: Indicates a successful response.
+- 401 Unauthorized: Indicates that the request has not been authenticated. Check the response body for additional details.
+
+### Method: GET
+
+> ```
+> {{baseUrl}}/orders
+> ```
+
+### 🔑 Authentication noauth
+
+| Param | value | Type |
+| ----- | ----- | ---- |
+
+## End-point: Create an order
+
+The `POST /orders` endpoint is used to submit a new order. Upon successful submission, the associated cart is deleted.
+
+#### Parameters
+
+- Authorization: `string` (header, required) - The bearer token of the API client.
+- cartId: `string` (body, required) - The cart id.
+- customerName: `string` (body, required) - The name of the customer.
+- comment: `string` (body, optional) - A comment associated with the order.
+
+#### Example request body:
+
+```json
+{
+  "cartId": "ZFe4yhG5qNhmuNyrbLWa4",
+  "customerName": "John Doe"
+}
+```
+
+#### Response
+
+Upon successful submission, the response will have a status code of 201 and a JSON content with the following structure:
+
+```json
+{
+  "created": true,
+  "orderId": ""
+}
+```
+
+### Method: POST
+
+> ```
+> {{baseUrl}}/orders
+> ```
+
+### Body (**raw**)
+
+```json
+{
+  "cartId": "{{cartID}}",
+  "customerName": "{{$randomFullName}}"
+}
+```
+
+### 🔑 Authentication bearer
+
+| Param | value                                                            | Type   |
+| ----- | ---------------------------------------------------------------- | ------ |
+| token | c8a75070946c31d09824d1dee664486c0ae72ee4586695e52009fce83fca4d9g | string |
+
+## End-point: Get all orders
+
+Returns all orders created by the API client.
+
+#### Parameters
+
+- Authorization: (string, header, required) - Specifies the bearer token of the API client.
+
+#### Status codes
+
+- 200 OK: Indicates a successful response.
+- 401 Unauthorized: Indicates that the request has not been authenticated. Check the response body for additional details.
+
+### Method: GET
+
+> ```
+> {{baseUrl}}/orders
+> ```
+
+### 🔑 Authentication bearer
+
+| Param | value                                                            | Type   |
+| ----- | ---------------------------------------------------------------- | ------ |
+| token | c8a75070946c31d09824d1dee664486c0ae72ee4586695e52009fce83fca4d9g | string |
+
+# 📁 Collection: Invalid inputs
+
+## End-point: Get all products - invalid category
+
+Returns a list of products from the inventory.
+
+#### Parameters
+
+- `category` (string, query, optional): Specifies the category of products you want to be returned. It can be one of: meat-seafood, fresh-produce, candy, bread-bakery, dairy, eggs, coffee.
+- `results` (integer, query, optional): Specifies the number of results you want. Must be a number between 1 and 20. By default, only 20 products will be displayed.
+- `available` (boolean, query, optional): Specifies the availability of the products. By default, all products will be displayed.
+
+#### Response
+
+The response will be a JSON array containing objects with the following properties:
+
+- `id` (number): The unique identifier of the product.
+- `category` (string): The category of the product.
+- `name` (string): The name of the product.
+- `inStock` (boolean): Indicates the availability of the product.
+
+#### Status codes
+
+- 200 OK: Indicates a successful response.
+- 400 Bad Request: Indicates that the parameters provided are invalid.
+
+### Method: GET
+
+> ```
+> {{baseUrl}}/products?results=2&category=invalid-token
+> ```
+
+### Query Params
+
+| Param    | value         |
+| -------- | ------------- |
+| results  | 2             |
+| category | invalid-token |
+
+## End-point: Get all products - Results > maximum
+
+Returns a list of products from the inventory.
+
+#### Parameters
+
+- `category` (string, query, optional): Specifies the category of products you want to be returned. It can be one of: meat-seafood, fresh-produce, candy, bread-bakery, dairy, eggs, coffee.
+- `results` (integer, query, optional): Specifies the number of results you want. Must be a number between 1 and 20. By default, only 20 products will be displayed.
+- `available` (boolean, query, optional): Specifies the availability of the products. By default, all products will be displayed.
+
+#### Response
+
+The response will be a JSON array containing objects with the following properties:
+
+- `id` (number): The unique identifier of the product.
+- `category` (string): The category of the product.
+- `name` (string): The name of the product.
+- `inStock` (boolean): Indicates the availability of the product.
+
+#### Status codes
+
+- 200 OK: Indicates a successful response.
+- 400 Bad Request: Indicates that the parameters provided are invalid.
+
+### Method: GET
+
+> ```
+> {{baseUrl}}/products?results=21&category=coffee
+> ```
+
+### Query Params
+
+| Param    | value  |
+| -------- | ------ |
+| results  | 21     |
+| category | coffee |
+
+## End-point: Get all products - Results < minimum
+
+Returns a list of products from the inventory.
+
+#### Parameters
+
+- `category` (string, query, optional): Specifies the category of products you want to be returned. It can be one of: meat-seafood, fresh-produce, candy, bread-bakery, dairy, eggs, coffee.
+- `results` (integer, query, optional): Specifies the number of results you want. Must be a number between 1 and 20. By default, only 20 products will be displayed.
+- `available` (boolean, query, optional): Specifies the availability of the products. By default, all products will be displayed.
+
+#### Response
+
+The response will be a JSON array containing objects with the following properties:
+
+- `id` (number): The unique identifier of the product.
+- `category` (string): The category of the product.
+- `name` (string): The name of the product.
+- `inStock` (boolean): Indicates the availability of the product.
+
+#### Status codes
+
+- 200 OK: Indicates a successful response.
+- 400 Bad Request: Indicates that the parameters provided are invalid.
+
+### Method: GET
+
+> ```
+> {{baseUrl}}/products?results=-1&category=coffee
+> ```
+
+### Query Params
+
+| Param    | value  |
+| -------- | ------ |
+| results  | -1     |
+| category | coffee |
