@@ -150,11 +150,6 @@
 									"// Set the cartId parameter using pm.variables.get()",
 									"var cartId = pm.variables.get(\"cartId\");",
 									"",
-									"// Make the HTTP GET request to retrieve the status of the grocery store API",
-									"pm.sendRequest('{{baseUrl}}/carts/' + cartId, function (err, response) {",
-									"    // Add your tests here",
-									"});",
-									"",
 									"pm.test(\"Response status code is 200\", function () {",
 									"  pm.response.to.have.status(200);",
 									"});"
@@ -234,13 +229,16 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"// Set the cartID variable in the collection to the response value",
-									"pm.test(\"Set cartID variable in the collection to the response value\", function () {",
-									"    var jsonData = pm.response.json();",
-									"    pm.collectionVariables.set(\"cartID\", jsonData.cartId);",
-									"});",
-									"pm.test(\"Response status code is 201\", function () {",
-									"  pm.response.to.have.status(201);",
+									"pm.test('Response status code is 201', function () {",
+									"    pm.response.to.have.status(201);",
+									"})",
+									"",
+									"pm.test(\"Response has valid cart id\", function () {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.be.an('object');",
+									"    pm.expect(jsonData).to.have.property('cartId');",
+									"    pm.expect(jsonData.cartId).to.be.an('string');",
+									"    pm.collectionVariables.set('cartID', jsonData.cartId);",
 									"});"
 								],
 								"type": "text/javascript",
@@ -271,14 +269,25 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"// Set the itemID variable in the collection to the response value",
-									"pm.test(\"Set itemID variable in the collection to the response value\", function () {",
-									"    var jsonData = pm.response.json();",
-									"    pm.collectionVariables.set(\"itemID\", jsonData.itemId);",
-									"});",
-									"",
 									"pm.test(\"Response status code is 201\", function () {",
 									"  pm.response.to.have.status(201);",
+									"});",
+									"",
+									"const jsonData = pm.response.json();",
+									"",
+									"pm.test(\"Item was created\", function () {",
+									"  pm.expect(jsonData).to.be.an(\"object\");",
+									"",
+									"  pm.expect(jsonData).to.haveOwnProperty(\"created\");",
+									"  pm.expect(jsonData.created).to.be.an(\"boolean\");",
+									"  pm.expect(jsonData.created).to.equal(true);",
+									"  ",
+									"  pm.expect(jsonData).to.haveOwnProperty(\"itemId\");",
+									"  pm.expect(jsonData.itemId).to.be.an(\"number\");",
+									"});",
+									"",
+									"pm.test(\"Set itemID variable in the collection to the response value\", function () {",
+									"    pm.collectionVariables.set(\"lastAddedItemId\", jsonData.itemId);",
 									"});"
 								],
 								"type": "text/javascript",
@@ -365,7 +374,7 @@
 								},
 								{
 									"key": "itemId",
-									"value": "{{itemID}}"
+									"value": "{{lastAddedItemId}}"
 								}
 							]
 						},
@@ -419,7 +428,7 @@
 								},
 								{
 									"key": "itemId",
-									"value": "{{itemID}}"
+									"value": "{{lastAddedItemId}}"
 								}
 							]
 						},
@@ -473,7 +482,7 @@
 								},
 								{
 									"key": "itemId",
-									"value": "{{itemID}}"
+									"value": "{{lastAddedItemId}}"
 								}
 							]
 						},
@@ -482,14 +491,14 @@
 					"response": []
 				},
 				{
-					"name": "Get all orders",
+					"name": "Register API client",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"Response status code is 200\", function () {",
-									"  pm.response.to.have.status(200);",
+									"pm.test(\"Response status code is 201\", function () {",
+									"  pm.response.to.have.status(201);",
 									"});"
 								],
 								"type": "text/javascript",
@@ -498,28 +507,27 @@
 						}
 					],
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{accessToken}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
+						"method": "POST",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"clientName\" : \"Andrew Friedman\",\n    \"clientEmail\" : \"andrewfriedman01@gmail.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
-							"raw": "{{baseUrl}}/orders",
+							"raw": "{{baseUrl}}/api-clients",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
-								"orders"
+								"api-clients"
 							]
 						},
-						"description": "Returns all orders created by the API client.\n\n#### Parameters\n\n- Authorization: (string, header, required) - Specifies the bearer token of the API client.\n    \n\n#### Status codes\n\n- 200 OK: Indicates a successful response.\n- 401 Unauthorized: Indicates that the request has not been authenticated. Check the response body for additional details."
+						"description": "Registers a new API client.\n\n#### HTTP Request\n\n``` json\nPOST {{baseUrl}}/api-clients\n\n ```\n\n#### Parameters\n\nThe request body needs to be in JSON format.\n\n| Name | Type | In | Required | Description |\n| --- | --- | --- | --- | --- |\n| clientName | string | body | Yes | The name of the API client. |\n| clientEmail | string | body | Yes | The email address of the API client. |\n\n\\*The email address DOES NOT need to be real. The email will not be stored on the server.\n\n#### Status codes\n\n- 201 Created: Indicates that the client has been registered successfully.\n- 400 Bad Request: Indicates that the parameters provided are invalid.\n- 409 Conflict: Indicates that an API client has already been registered with this email address.\n    \n\n#### Example request body:\n\n``` json\n{\n   \"clientName\": \"Postman on Valentin's computer\",\n   \"clientEmail\": \"valentin@example.com\"\n}\n\n ```"
 					},
 					"response": []
 				},
@@ -573,20 +581,82 @@
 					"response": []
 				},
 				{
+					"name": "Get all orders",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"  pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Created order is in the list\", function () {",
+									"    const orderFound = pm.response.json().find((order => order.id === pm.collectionVariables.get(\"orderId\"))); ",
+									"",
+									"    console.log(orderFound);",
+									"",
+									"    pm.expect(orderFound).is.an(\"object\");",
+									"    ",
+									"    if (orderFound) {",
+									"        pm.collectionVariables.set(\"order\", orderFound);",
+									"    }",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/orders",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"orders"
+							]
+						},
+						"description": "Returns all orders created by the API client.\n\n#### Parameters\n\n- Authorization: (string, header, required) - Specifies the bearer token of the API client.\n    \n\n#### Status codes\n\n- 200 OK: Indicates a successful response.\n- 401 Unauthorized: Indicates that the request has not been authenticated. Check the response body for additional details."
+					},
+					"response": []
+				},
+				{
 					"name": "Create an order",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
 								"exec": [
-									"// Set the orderID variable in the collection to the response value",
-									"pm.test(\"Set orderID variable in the collection to the response value\", function () {",
-									"    var jsonData = pm.response.json();",
-									"    pm.collectionVariables.set(\"orderID\", jsonData.orderId);",
+									"pm.test(\"Response status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
 									"});",
 									"",
-									"pm.test(\"Response status code is 201\", function () {",
-									"  pm.response.to.have.status(201);",
+									"const jsonData = pm.response.json();",
+									"",
+									"pm.test(\"Order was created\", function () {",
+									"    pm.expect(jsonData).to.be.an(\"object\");",
+									"",
+									"    pm.expect(jsonData).to.haveOwnProperty(\"created\");",
+									"    pm.expect(jsonData.created).to.be.an(\"boolean\");",
+									"    pm.expect(jsonData.created).to.equal(true);",
+									"",
+									"    pm.expect(jsonData).to.haveOwnProperty(\"orderId\");",
+									"    pm.expect(jsonData.orderId).to.be.an(\"string\");",
+									"    pm.collectionVariables.set(\"orderId\", jsonData.orderId);",
 									"});"
 								],
 								"type": "text/javascript",
@@ -746,14 +816,22 @@
 					"response": []
 				},
 				{
-					"name": "Register API client",
+					"name": "Get single order (missing)",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.test(\"Response status code is 201\", function () {",
-									"  pm.response.to.have.status(201);",
+									"pm.test(\"Response status code is 404\", function () {",
+									"  pm.response.to.have.status(404);",
+									"});",
+									"",
+									"pm.test(\"Error message contains the deleted order id.\", function () {",
+									"    const data = pm.response.json();",
+									"",
+									"    pm.expect(data).to.haveOwnProperty(\"error\");",
+									"    pm.expect(data.error).to.be.an(\"string\");",
+									"    pm.expect(data.error).to.contain(pm.collectionVariables.get(\"orderID\"));",
 									"});"
 								],
 								"type": "text/javascript",
@@ -762,27 +840,35 @@
 						}
 					],
 					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"clientName\" : \"Andrew Friedman\",\n    \"clientEmail\" : \"andrewfriedman01@gmail.com\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
 								}
-							}
+							]
 						},
+						"method": "GET",
+						"header": [],
 						"url": {
-							"raw": "{{baseUrl}}/api-clients",
+							"raw": "{{baseUrl}}/orders/:orderId",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
-								"api-clients"
+								"orders",
+								":orderId"
+							],
+							"variable": [
+								{
+									"key": "orderId",
+									"value": "{{orderID}}"
+								}
 							]
 						},
-						"description": "Registers a new API client.\n\n#### HTTP Request\n\n``` json\nPOST {{baseUrl}}/api-clients\n\n ```\n\n#### Parameters\n\nThe request body needs to be in JSON format.\n\n| Name | Type | In | Required | Description |\n| --- | --- | --- | --- | --- |\n| clientName | string | body | Yes | The name of the API client. |\n| clientEmail | string | body | Yes | The email address of the API client. |\n\n\\*The email address DOES NOT need to be real. The email will not be stored on the server.\n\n#### Status codes\n\n- 201 Created: Indicates that the client has been registered successfully.\n- 400 Bad Request: Indicates that the parameters provided are invalid.\n- 409 Conflict: Indicates that an API client has already been registered with this email address.\n    \n\n#### Example request body:\n\n``` json\n{\n   \"clientName\": \"Postman on Valentin's computer\",\n   \"clientEmail\": \"valentin@example.com\"\n}\n\n ```"
+						"description": "Returns a single order.\n\n#### Parameters\n\n- Authorization (string, header, required): The bearer token of the API client.\n    \n- orderId (string, path, required): The order id.\n    \n- invoice (boolean, query, optional): Show the PDF invoice.\n    \n\n#### Status codes\n\n- 200 OK: Indicates a successful response.\n- 401 Unauthorized: Indicates that the request has not been authenticated. Check the response body for additional details.\n    \n- 404 Not found: Indicates that there is no order with the specified id associated with the API client."
 					},
 					"response": []
 				}
@@ -1233,11 +1319,15 @@
 			"type": "string"
 		},
 		{
-			"key": "itemID",
+			"key": "orderId",
 			"value": ""
 		},
 		{
-			"key": "orderID",
+			"key": "lastAddedItemId",
+			"value": "YOUR ITEM ID"
+		},
+		{
+			"key": "order",
 			"value": ""
 		}
 	]

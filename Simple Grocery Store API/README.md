@@ -328,30 +328,57 @@ Deletes the specified item from the cart.
 
 ```
 
-## End-point: Get all orders
+## End-point: Register API client
 
-Returns all orders created by the API client.
+Registers a new API client.
+
+#### HTTP Request
+
+```json
+POST {{baseUrl}}/api-clients
+
+```
 
 #### Parameters
 
-- Authorization: (string, header, required) - Specifies the bearer token of the API client.
+The request body needs to be in JSON format.
+
+| Name        | Type   | In   | Required | Description                          |
+| ----------- | ------ | ---- | -------- | ------------------------------------ |
+| clientName  | string | body | Yes      | The name of the API client.          |
+| clientEmail | string | body | Yes      | The email address of the API client. |
+
+\*The email address DOES NOT need to be real. The email will not be stored on the server.
 
 #### Status codes
 
-- 200 OK: Indicates a successful response.
-- 401 Unauthorized: Indicates that the request has not been authenticated. Check the response body for additional details.
+- 201 Created: Indicates that the client has been registered successfully.
+- 400 Bad Request: Indicates that the parameters provided are invalid.
+- 409 Conflict: Indicates that an API client has already been registered with this email address.
 
-### Method: GET
+#### Example request body:
+
+```json
+{
+  "clientName": "Postman on Valentin's computer",
+  "clientEmail": "valentin@example.com"
+}
+```
+
+### Method: POST
 
 > ```
-> {{baseUrl}}/orders
+> {{baseUrl}}/api-clients
 > ```
 
-### 🔑 Authentication bearer
+### Body (**raw**)
 
-| Param | value           | Type   |
-| ----- | --------------- | ------ |
-| token | {{accessToken}} | string |
+```json
+{
+  "clientName": "Andrew Friedman",
+  "clientEmail": "andrewfriedman01@gmail.com"
+}
+```
 
 ## End-point: Get single order
 
@@ -373,6 +400,31 @@ Returns a single order.
 
 > ```
 > {{baseUrl}}/orders/:orderId
+> ```
+
+### 🔑 Authentication bearer
+
+| Param | value           | Type   |
+| ----- | --------------- | ------ |
+| token | {{accessToken}} | string |
+
+## End-point: Get all orders
+
+Returns all orders created by the API client.
+
+#### Parameters
+
+- Authorization: (string, header, required) - Specifies the bearer token of the API client.
+
+#### Status codes
+
+- 200 OK: Indicates a successful response.
+- 401 Unauthorized: Indicates that the request has not been authenticated. Check the response body for additional details.
+
+### Method: GET
+
+> ```
+> {{baseUrl}}/orders
 > ```
 
 ### 🔑 Authentication bearer
@@ -518,57 +570,33 @@ Deletes the order with the specified orderId.
 | ----- | --------------- | ------ |
 | token | {{accessToken}} | string |
 
-## End-point: Register API client
+## End-point: Get single order (missing)
 
-Registers a new API client.
-
-#### HTTP Request
-
-```json
-POST {{baseUrl}}/api-clients
-
-```
+Returns a single order.
 
 #### Parameters
 
-The request body needs to be in JSON format.
-
-| Name        | Type   | In   | Required | Description                          |
-| ----------- | ------ | ---- | -------- | ------------------------------------ |
-| clientName  | string | body | Yes      | The name of the API client.          |
-| clientEmail | string | body | Yes      | The email address of the API client. |
-
-\*The email address DOES NOT need to be real. The email will not be stored on the server.
+- Authorization (string, header, required): The bearer token of the API client.
+- orderId (string, path, required): The order id.
+- invoice (boolean, query, optional): Show the PDF invoice.
 
 #### Status codes
 
-- 201 Created: Indicates that the client has been registered successfully.
-- 400 Bad Request: Indicates that the parameters provided are invalid.
-- 409 Conflict: Indicates that an API client has already been registered with this email address.
+- 200 OK: Indicates a successful response.
+- 401 Unauthorized: Indicates that the request has not been authenticated. Check the response body for additional details.
+- 404 Not found: Indicates that there is no order with the specified id associated with the API client.
 
-#### Example request body:
-
-```json
-{
-  "clientName": "Postman on Valentin's computer",
-  "clientEmail": "valentin@example.com"
-}
-```
-
-### Method: POST
+### Method: GET
 
 > ```
-> {{baseUrl}}/api-clients
+> {{baseUrl}}/orders/:orderId
 > ```
 
-### Body (**raw**)
+### 🔑 Authentication bearer
 
-```json
-{
-  "clientName": "Andrew Friedman",
-  "clientEmail": "andrewfriedman01@gmail.com"
-}
-```
+| Param | value           | Type   |
+| ----- | --------------- | ------ |
+| token | {{accessToken}} | string |
 
 # 📁 Collection: Missing authentication
 
